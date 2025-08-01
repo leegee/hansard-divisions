@@ -12,4 +12,4 @@ https://commonsvotes-api.parliament.uk/swagger/ui/index#/Divisions
 
 ### 3D clustered voting pattern of MPs with more than 50 votes over the past decade
 
-[3D clustered voting pattern of MPs with more than 50 votes over the past decade](./visualisations/mp_votes_3d_cluster.html)
+[3D clustered voting pattern of MPs with more than 50 votes over the past decade](https://leegee.github.io/hansard-divisions/mp_votes_3d_cluster.html)

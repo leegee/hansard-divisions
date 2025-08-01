@@ -2,3 +2,4 @@
 *.json
 *.csv
 *.parquet
+node_modules/
