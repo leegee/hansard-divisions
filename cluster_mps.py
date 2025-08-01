@@ -4,6 +4,7 @@ import seaborn as sns
 import json
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
+import mplcursors
 
 # Load vote matrix
 df = pd.read_parquet("mp_vote_map.parquet")
@@ -22,6 +23,7 @@ with open("mp_party.json", "r", encoding="utf-8") as f:
 
 party_lookup = {int(k): v.get("Party", "Unknown") for k, v in party_map.items()}
 colour_lookup = {int(k): "#" + v.get("PartyColour", "999999") for k, v in party_map.items()}
+name_lookup = {int(k): v.get("Name", f"MP {k}") for k, v in party_map.items()}
 
 # Reduce dimensions
 pca = PCA(n_components=2)
@@ -35,10 +37,11 @@ plot_df = pd.DataFrame({
 })
 plot_df["Party"] = plot_df["MemberId"].map(party_lookup)
 plot_df["Colour"] = plot_df["MemberId"].map(colour_lookup)
+plot_df["Name"] = plot_df["MemberId"].map(name_lookup)
 
 # Plot
 plt.figure(figsize=(12, 9))
-sns.scatterplot(
+scatter = sns.scatterplot(
     data=plot_df,
     x="x", y="y",
     hue="Party",
@@ -48,10 +51,21 @@ sns.scatterplot(
     edgecolor="black"
 )
 
-plt.title("MPs Clustered by Voting Record (Coloured by Party)")
+plt.title("MPs With > 50 Votes, Clustered by Voting Record For the Past Decade")
 plt.xlabel("PCA Component 1")
 plt.ylabel("PCA Component 2")
 plt.grid(True)
 plt.legend(title="Party", bbox_to_anchor=(1.05, 1), loc="upper left")
 plt.tight_layout()
+
+# Add interactive hover tooltips showing MP names
+cursor = mplcursors.cursor(scatter.collections[0], hover=True)
+@cursor.connect("add")
+def on_add(sel):
+    idx = sel.index
+    name = plot_df.iloc[idx]["Name"]
+    party = plot_df.iloc[idx]["Party"]
+    sel.annotation.set(text=f"{name}\n{party}")
+    sel.annotation.get_bbox_patch().set(fc="white", alpha=0.8)
+
 plt.show()

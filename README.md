@@ -4,3 +4,4 @@ A worrying amount of data is missing from this API, that seems to be nearly ten 
 
 https://commonsvotes-api.parliament.uk/swagger/ui/index#/Divisions
 
+![./README/Figure_1.png](./README/Figure_1.png)
